@@ -12,6 +12,7 @@ project(programs C)
 # Add your file in this list.
 set(PROGRAMS
     init.c
+    id.c
     cpuid.c
     clear.c
     date.c
