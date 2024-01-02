@@ -65,6 +65,8 @@ endif()
 # COMPILATION
 # =============================================================================
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Add the sub-directories.
 add_subdirectory(programs)
 add_subdirectory(programs/tests)
