@@ -174,6 +174,15 @@ make filesystem
 ```
 you just need to generate the filesystem once. If you change a `program` you need to re-generate the entire filesystem with `make filesystem`, but this will override any changes you made to the files inside the `rootfs.img`. In the future I will find a way to update just the `/usr/bin` directory and the programs.
 
+The generated filesystem will carry over the permissions present on the host system.
+To change the permissions to a more realistic OS setup run:
+
+```bash
+make filesystem_permissions
+```
+
+This will mount the generated rootfs.img using `fuse2fs` and change file ownership of most files to root.
+
 *[Back to the Table of Contents](#table-of-contents)*
 
 ## 6. Running MentOS
