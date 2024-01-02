@@ -171,6 +171,22 @@ add_custom_target(filesystem
     DEPENDS programs tests
 )
 
+# MentOS is compatible with EXT2 filesystems. This targets set realistic
+# permissions in the generated filesystem using the content of the `files` folder.
+add_custom_target(filesystem_permissions
+    COMMAND echo '============================================================================='
+    COMMAND echo 'Fix root filesystem permissions...'
+    COMMAND echo '============================================================================='
+    COMMAND mkdir -p ${CMAKE_BINARY_DIR}/root
+    COMMAND sudo fuse2fs ${CMAKE_BINARY_DIR}/rootfs.img ${CMAKE_BINARY_DIR}/root
+    COMMAND sudo chown root:root -R ${CMAKE_BINARY_DIR}/root
+    COMMAND sudo chmod -R u=rwX,go=rX -R ${CMAKE_BINARY_DIR}/root
+    COMMAND sudo chown 1000:1000 -R ${CMAKE_BINARY_DIR}/root/home/user
+    COMMAND sudo chmod -R u=rwX,go= -R ${CMAKE_BINARY_DIR}/root/home/user
+    COMMAND sudo umount ${CMAKE_BINARY_DIR}/root
+    DEPENDS filesystem
+)
+
 # =============================================================================
 # EMULATOR CONFIGURATION
 # =============================================================================
