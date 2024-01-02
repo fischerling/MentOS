@@ -142,6 +142,8 @@ set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -m32")
 # SUB-DIRECTORIES SETUP
 # =============================================================================
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Add the sub-directories.
 add_subdirectory(programs)
 add_subdirectory(programs/tests)
