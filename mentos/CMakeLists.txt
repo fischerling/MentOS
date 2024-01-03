@@ -100,6 +100,7 @@ set(KERNEL_SOURCES
     ${PROJECT_SOURCE_DIR}/src/drivers/ata.c
     ${PROJECT_SOURCE_DIR}/src/drivers/rtc.c
     ${PROJECT_SOURCE_DIR}/src/drivers/fdc.c
+    ${PROJECT_SOURCE_DIR}/src/drivers/mem.c
     ${PROJECT_SOURCE_DIR}/src/drivers/mouse.c
     ${PROJECT_SOURCE_DIR}/src/drivers/ps2.c
     ${PROJECT_SOURCE_DIR}/src/drivers/keyboard/keyboard.c
