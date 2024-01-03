@@ -49,6 +49,8 @@ set(TESTS
     t_shm_write.c
     # Test scheduling feedback tests.
     t_schedfb.c
+    # Test the filestystem.
+    t_dup.c
 )
 
 # =============================================================================

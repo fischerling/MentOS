@@ -118,6 +118,7 @@ add_library(
     ${PROJECT_SOURCE_DIR}/src/unistd/write.c
     ${PROJECT_SOURCE_DIR}/src/unistd/exec.c
     ${PROJECT_SOURCE_DIR}/src/unistd/nice.c
+    ${PROJECT_SOURCE_DIR}/src/unistd/dup.c
     ${PROJECT_SOURCE_DIR}/src/unistd/open.c
     ${PROJECT_SOURCE_DIR}/src/unistd/reboot.c
     ${PROJECT_SOURCE_DIR}/src/unistd/waitpid.c
