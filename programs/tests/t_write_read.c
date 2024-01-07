@@ -144,7 +144,7 @@ int test_append(const char *filename)
 
 int main(int argc, char *argv[])
 {
-    char *filename = "/home/user/test.txt";
+    char *filename = "/home/alice/test.txt";
 
     printf("Running `test_write_read`...\n");
     if (test_write_read(filename)) {

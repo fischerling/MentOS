@@ -179,10 +179,7 @@ add_custom_target(filesystem_permissions
     COMMAND echo '============================================================================='
     COMMAND mkdir -p ${CMAKE_BINARY_DIR}/root
     COMMAND sudo fuse2fs ${CMAKE_BINARY_DIR}/rootfs.img ${CMAKE_BINARY_DIR}/root
-    COMMAND sudo chown root:root -R ${CMAKE_BINARY_DIR}/root
-    COMMAND sudo chmod -R u=rwX,go=rX -R ${CMAKE_BINARY_DIR}/root
-    COMMAND sudo chown 1000:1000 -R ${CMAKE_BINARY_DIR}/root/home/user
-    COMMAND sudo chmod -R u=rwX,go= -R ${CMAKE_BINARY_DIR}/root/home/user
+    COMMAND sudo ${CMAKE_SOURCE_DIR}/scripts/fix_permissions.sh ${CMAKE_BINARY_DIR}/root
     COMMAND sudo umount ${CMAKE_BINARY_DIR}/root
     DEPENDS filesystem
 )
