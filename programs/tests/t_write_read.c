@@ -212,7 +212,7 @@ int test_append(const char *filename)
 int main(int argc, char *argv[])
 {
     // Specify the file name.
-    char *filename = "/home/user/t_write_read.txt";
+    char *filename = "/home/alice/t_write_read.txt";
 
     // Test write and read operations.
     printf("Running `test_write_read`...\n");
