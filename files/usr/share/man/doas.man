@@ -1,0 +1,15 @@
+SYNOPSIS
+    doas [--help] COMMAND
+
+DESCRIPTION
+    The doas utility executes the given command as another user.
+    The command argument is mandatory.
+
+    The user will be required to authenticate by entering their password.
+
+    The doas utility is configured by the /etc/doas.conf file.
+
+    Lines starting with permit allow the following USER or :GROUP to use doas.
+
+OPTIONS
+    -h, --help  shows command help.
