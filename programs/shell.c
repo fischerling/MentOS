@@ -824,6 +824,10 @@ static int __execute_file(char *path)
         exit(1);
     }
     while (fgets(cmd, sizeof(cmd), fd)) {
+        if (cmd[0] == '#') {
+            continue;
+        }
+
         if ((status = __execute_cmd(cmd, false)) != 0) {
             printf("\n%s: exited with %d\n", cmd, status);
         }
