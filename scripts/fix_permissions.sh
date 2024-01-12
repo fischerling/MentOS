@@ -13,7 +13,8 @@ chown root:root -R "${ROOT}"
 sudo chmod -R u=rwX,go=rX -R "${ROOT}"
 
 # Set security related permissions
-sudo chmod og-rwx "${ROOT}"/etc/passwd
+sudo chmod 644 "${ROOT}"/etc/passwd
+sudo chmod og-rwx "${ROOT}"/etc/shadow
 
 # Set user permissions
 sudo chown 1000:1000 -R "${ROOT}"/home/alice

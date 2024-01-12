@@ -87,6 +87,7 @@ add_library(
     ${PROJECT_SOURCE_DIR}/src/vsprintf.c
     ${PROJECT_SOURCE_DIR}/src/vscanf.c
     ${PROJECT_SOURCE_DIR}/src/pwd.c
+    ${PROJECT_SOURCE_DIR}/src/shadow.c
     ${PROJECT_SOURCE_DIR}/src/grp.c
     ${PROJECT_SOURCE_DIR}/src/sched.c
     ${PROJECT_SOURCE_DIR}/src/readline.c
