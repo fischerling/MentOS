@@ -16,6 +16,9 @@ chmod -R u=rwX,go=rX -R "${ROOT}"
 chmod 644 "${ROOT}"/etc/passwd
 chmod og-rwx "${ROOT}"/etc/shadow
 
+# Set suid on doas
+sudo chmod +s "${ROOT}"/bin/doas
+
 # Set user permissions
 chown 1000:1000 -R "${ROOT}"/home/alice
 chown 1001:1001 -R "${ROOT}"/home/bob

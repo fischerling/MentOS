@@ -4,6 +4,7 @@ option(ENCRYPTED_SHADOW "Expect the shadow entries to be encrypted using SHA256.
 # List of programs.
 set(PROGRAM_LIST
     cat.c
+    doas.c
     chmod.c
     chown.c
     clear.c
