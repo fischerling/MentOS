@@ -13,6 +13,7 @@ project(programs C)
 set(PROGRAMS
     init.c
     id.c
+    false.c
     cpuid.c
     clear.c
     date.c
