@@ -15,6 +15,7 @@
 int main(int argc, char *argv[])
 {
     char *idptr;
+    char *saveptr;
     char *endptr;
     uid_t uid = -1;
     gid_t gid = -1;
@@ -26,7 +27,7 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    idptr = strtok(argv[1], ":");
+    idptr = strtok_r(argv[1], ":", &saveptr);
     if (argv[1][0] != ':') {               /* Skip the username */
         uid = strtol(idptr, &endptr, 10);  /* Allow a numeric string */
         if (*endptr != '\0') {             /* Was not pure numeric string */
@@ -38,7 +39,7 @@ int main(int argc, char *argv[])
 
             uid = pwd->pw_uid;
         }
-        idptr = strtok(NULL, ":");
+        idptr = strtok_r(NULL, ":", &saveptr);
     }
 
     if (idptr != NULL) {
