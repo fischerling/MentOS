@@ -1,5 +1,6 @@
 # List of programs.
 set(PROGRAM_LIST
+    cp.c
     chmod.c
     chown.c
     doas.c
