@@ -12,6 +12,8 @@ fi
 chown root:root -R "${ROOT}"
 sudo chmod -R u=rwX,go=rX -R "${ROOT}"
 
+sudo chmod -R a+rx "${ROOT}"/bin
+
 # Set security related permissions
 sudo chmod 644 "${ROOT}"/etc/passwd
 sudo chmod og-rwx "${ROOT}"/etc/shadow
