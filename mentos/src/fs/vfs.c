@@ -719,8 +719,31 @@ int vfs_valid_open_permissions(int flags, mode_t mask, uid_t uid, gid_t gid)
 /// @brief Checks if the task is allowed to execture the file
 /// @param task the task to exectue the file.
 /// @param file the file to exectue.
-/// @return 1 on success, 0 otherwise.
+/// @return 1 on success, -errno or 0 otherwise.
 int vfs_valid_exec_permission(task_struct *task, vfs_file_t *file) {
+    // Resolve all symbolic links
+    for(;;) {
+        stat_t statbuf;
+        int ret = vfs_fstat(file, &statbuf);
+        if (ret < 0) {
+            return ret;
+        }
+        if (!(S_ISLNK(statbuf.st_mode))) {
+            break;
+        }
+        // Resolve the symbolic link
+        char buf[PATH_MAX];
+        ret = vfs_readlink(file, buf, sizeof(buf));
+        if (ret <= 0) {
+            pr_err("Failed to read symbolic link: %s.\n", file->name);
+        }
+        file = vfs_open(buf, O_RDONLY, 0);
+        if (file == NULL) {
+            pr_err("Failed to open: %s.\n", buf);
+            return -errno;
+        }
+    }
+
     // Init, and all root processes may execute any file with an execute bit set
     if ((task->pid == 0) || (task->uid == 0) || (task->gid == 0)) {
         return file->mask & (S_IXUSR | S_IXGRP | S_IXOTH);
