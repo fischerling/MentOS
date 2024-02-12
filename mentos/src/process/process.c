@@ -12,6 +12,7 @@
 #include "assert.h"
 #include "elf/elf.h"
 #include "fcntl.h"
+#include "fs/namei.h"
 #include "fs/vfs.h"
 #include "hardware/timer.h"
 #include "klib/stack_helper.h"
@@ -119,7 +120,13 @@ static int __reset_process(task_struct *task)
 static int __load_executable(const char *path, task_struct *task, uint32_t *entry)
 {
     pr_debug("__load_executable(`%s`, %p `%s`, %p)\n", path, task, task->name, entry);
-    vfs_file_t *file = vfs_open(path, O_RDONLY, 0);
+    char absolute_path[PATH_MAX];
+    int ret = resolve_path(path, absolute_path, sizeof(absolute_path), FOLLOW_LINKS);
+    if (ret < 0) {
+        return ret;
+    }
+
+    vfs_file_t *file = vfs_open_abspath(absolute_path, O_RDONLY, 0);
     if (file == NULL) {
         pr_err("Cannot find executable!\n");
         return -errno;
@@ -150,7 +157,7 @@ static int __load_executable(const char *path, task_struct *task, uint32_t *entr
         destroy_process_image(task->mm);
     }
     // Return code variable.
-    int ret = 0;
+    ret = 0;
     // Recreate the memory of the process.
     if (__reset_process(task)) {
         // Load the elf file, check if 0 is returned and print the error.
