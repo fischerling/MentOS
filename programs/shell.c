@@ -308,7 +308,7 @@ static int __export(int argc, char *argv[])
 static int __cd(int argc, char *argv[])
 {
     if (argc > 2) {
-        printf("%s: too many arguments\n\n", argv[0]);
+        printf("%s: too many arguments\n", argv[0]);
         return 1;
     }
     const char *path = NULL;
@@ -317,13 +317,13 @@ static int __cd(int argc, char *argv[])
     } else {
         path = getenv("HOME");
         if (path == NULL) {
-            printf("cd: There is no home directory set.\n\n");
+            printf("cd: There is no home directory set.\n");
             return 1;
         }
     }
     int fd = open(path, O_RDONLY | O_DIRECTORY, S_IXUSR);
     if (fd == -1) {
-        printf("cd: %s\n\n", strerror(errno), path);
+        printf("cd: %s: %s\n", path, strerror(errno));
         return 1;
     }
     // Set current working directory.
@@ -626,7 +626,7 @@ static void __cmd_get(void)
                 // Re-set the index to the beginning.
                 cmd_cursor_index = 0;
                 // Go to the new line.
-                printf("\n\n");
+                printf("\n");
                 // Sets the command.
                 __cmd_set("\0");
                 // Break the while loop.
@@ -749,7 +749,7 @@ static void __setup_redirects(int *argcp, char ***argvp) {
 
         int fd = open(path, flags, mode);
         if (fd < 0) {
-            printf("\n%s: Failed to open file\n", path);
+            printf("%s: Failed to open file\n", path);
             exit(1);
         }
 
@@ -843,8 +843,8 @@ static int __execute_file(char *path)
     int status = 0;
     int fd;
     if ((fd = open(path, O_RDONLY, 0)) == -1) {
-        printf("\n%s: Failed to open file\n", path);
-        exit(1);
+        printf("%s: %s\n", path, strerror(errno));
+        return -errno;
     }
     while (fgets(cmd, sizeof(cmd), fd)) {
         if (cmd[0] == '#') {
@@ -922,7 +922,7 @@ int main(int argc, char *argv[])
         for (int i = 1; i < argc; ++i) {
             stat_t buf;
             if (stat(argv[i], &buf) < 0) {
-                printf("\n%s: No such file\n", argv[i]);
+                printf("%s: No such file\n", argv[i]);
                 exit(1);
             }
         }
