@@ -863,7 +863,10 @@ static void __interactive_mode(void)
 {
     stat_t buf;
     if (stat(".profile", &buf) == 0) {
-        __execute_file(".profile");
+        int ret = __execute_file(".profile");
+        if (ret < 0) {
+            printf("%s: .profile: %s\n", strerror(-ret));
+        }
     }
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EndlessLoop"
