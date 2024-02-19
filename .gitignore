@@ -113,6 +113,8 @@ src/initscp/initfscp
 
 # OS filesystem files.
 files/bin/**
+files/usr/bin/**
+files/src
 
 # ISO creation files.
 iso/boot/*.bin
