@@ -707,7 +707,7 @@ int vfs_valid_open_permissions(int flags, mode_t mask, uid_t uid, gid_t gid)
         return 1;
     }
     // Init, and all root processes have full permissions.
-    if ((task->pid == 0) || (task->uid == 0) || (task->gid == 0)) {
+    if ((task->pid == 0) || (task->uid == 0)) {
         return 1;
     }
     // Check the owners permission
