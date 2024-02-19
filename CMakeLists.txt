@@ -165,6 +165,10 @@ add_custom_target(filesystem
     COMMAND echo '============================================================================='
     COMMAND mkdir -p ${CMAKE_SOURCE_DIR}/files/proc
     COMMAND mkdir -p ${CMAKE_SOURCE_DIR}/files/dev
+    COMMAND mkdir -p ${CMAKE_SOURCE_DIR}/files/usr/src
+    COMMAND cp -r ${CMAKE_SOURCE_DIR}/mentos/src ${CMAKE_SOURCE_DIR}/files/usr/src/mentos
+    COMMAND cp -r ${CMAKE_SOURCE_DIR}/programs/ ${CMAKE_SOURCE_DIR}/files/usr/src/programs
+    COMMAND cp -r ${CMAKE_SOURCE_DIR}/libc/src ${CMAKE_SOURCE_DIR}/files/usr/src/libc
     COMMAND mke2fs -L 'rootfs' -N 0 -d ${CMAKE_SOURCE_DIR}/files -b 4096 -m 5 -r 1 -t ext2 -v -F ${CMAKE_BINARY_DIR}/rootfs.img 32M
     COMMAND echo '============================================================================='
     COMMAND echo 'Done!'
