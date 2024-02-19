@@ -20,6 +20,7 @@ sudo chmod og-rwx "${ROOT}"/etc/shadow
 
 # Set suid on doas
 sudo chmod +s "${ROOT}"/bin/doas
+sudo chmod +s "${ROOT}"/usr/bin/exercises/*/{setup,checkup}
 
 # Set user permissions
 sudo chown 1000:1000 -R "${ROOT}"/home/alice

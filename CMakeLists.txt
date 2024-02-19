@@ -130,6 +130,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Add the sub-directories.
 add_subdirectory(programs)
 add_subdirectory(programs/tests)
+add_subdirectory(programs/exercises)
 add_subdirectory(mentos)
 add_subdirectory(libc)
 add_subdirectory(doc)
