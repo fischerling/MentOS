@@ -531,7 +531,7 @@ int sys_execve(pt_regs *f)
     char *filename = (char *)f->ebx;
     if (filename == NULL) {
         pr_err("Received NULL filename.\n");
-        return -1;
+        return -ENOENT;
     }
     // Get the arguments
     origin_argv = (char **)f->ecx;
@@ -569,7 +569,7 @@ int sys_execve(pt_regs *f)
     if (!args_mem) {
         pr_err("Failed to allocate memory for arguments and environment %d (%d + %d).\n",
                argv_bytes + envp_bytes, argv_bytes, envp_bytes);
-        return -1;
+        return -ENOMEM;
     }
     // Copy the arguments.
     uint32_t args_mem_ptr = (uint32_t)args_mem + (argv_bytes + envp_bytes);
