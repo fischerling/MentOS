@@ -1,5 +1,6 @@
 # List of programs.
 set(PROGRAM_LIST
+    more.c
     runtests.c
     cp.c
     chmod.c
