@@ -147,6 +147,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Add the sub-directories.
 add_subdirectory(programs)
 add_subdirectory(programs/tests)
+add_subdirectory(programs/exercises)
 add_subdirectory(mentos)
 add_subdirectory(libc)
 add_subdirectory(doc)
@@ -228,6 +229,7 @@ add_custom_target(
     COMMAND echo "add-symbol-file ${CMAKE_BINARY_DIR}/mentos/kernel.bin" > ${CMAKE_BINARY_DIR}/gdb.run
     COMMAND echo "add-symbol-file ${CMAKE_BINARY_DIR}/mentos/bootloader.bin" >> ${CMAKE_BINARY_DIR}/gdb.run
     COMMAND find ${CMAKE_SOURCE_DIR}/files/bin -type f  | xargs realpath | sed 's/^/add-symbol-file /' >> ${CMAKE_BINARY_DIR}/gdb.run
+    COMMAND find ${CMAKE_SOURCE_DIR}/files/usr/bin -type f  | xargs realpath | sed 's/^/add-symbol-file /' >> ${CMAKE_BINARY_DIR}/gdb.run
     COMMAND echo "break boot.c: boot_main" >> ${CMAKE_BINARY_DIR}/gdb.run
     COMMAND echo "break kernel.c: kmain" >> ${CMAKE_BINARY_DIR}/gdb.run
     # Create the GDB connection file.
