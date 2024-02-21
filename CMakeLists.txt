@@ -148,6 +148,7 @@ add_custom_target(filesystem
     COMMAND echo '============================================================================='
     COMMAND mkdir -p ${CMAKE_SOURCE_DIR}/files/proc
     COMMAND mkdir -p ${CMAKE_SOURCE_DIR}/files/dev
+    COMMAND mkdir -p ${CMAKE_SOURCE_DIR}/files/src
     COMMAND cp -r ${CMAKE_SOURCE_DIR}/mentos/src ${CMAKE_SOURCE_DIR}/files/src/mentos
     COMMAND cp -r ${CMAKE_SOURCE_DIR}/programs/ ${CMAKE_SOURCE_DIR}/files/src/programs
     COMMAND cp -r ${CMAKE_SOURCE_DIR}/libc/src ${CMAKE_SOURCE_DIR}/files/src/libc
