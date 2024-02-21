@@ -862,10 +862,10 @@ static int __execute_file(char *path)
 static void __interactive_mode(void)
 {
     stat_t buf;
-    if (stat(".profile", &buf) == 0) {
-        int ret = __execute_file(".profile");
+    if (stat(".shellrc", &buf) == 0) {
+        int ret = __execute_file(".shellrc");
         if (ret < 0) {
-            printf("%s: .profile: %s\n", strerror(-ret));
+            printf("%s: .shellrc: %s\n", strerror(-ret));
         }
     }
 #pragma clang diagnostic push
