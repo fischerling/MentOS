@@ -7,6 +7,6 @@ DESCRIPTION
 
 
 OPTIONS
-    -h: shows command help. //non funziona per ora lol
-    -p: start the session with generated children
-    -f [FILE]: start the session launching a specified program
+    -h  shows command help. //non funziona per ora lol
+    -p  start the session with generated children
+    -f [FILE]  start the session launching a specified program
