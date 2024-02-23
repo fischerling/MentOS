@@ -677,16 +677,16 @@ int sys_dup(int fd)
 static inline int __valid_open_permissions(
     const mode_t mask,
     const int flags,
-    const int write,
-    const int read)
+    const int read,
+    const int write)
 {
-    if ((flags & O_RDONLY) == O_RDONLY) {
-        return mask & write;
-    }
-    if ((flags & O_WRONLY) == O_WRONLY) {
+    if ((flags & O_ACCMODE) == O_RDONLY) {
         return mask & read;
     }
-    if ((flags & O_RDWR) == O_RDWR) {
+    if ((flags & O_ACCMODE) == O_WRONLY) {
+        return mask & write;
+    }
+    if ((flags & O_ACCMODE) == O_RDWR) {
         return mask & (write | read);
     }
     return 0;
@@ -722,9 +722,9 @@ int vfs_valid_open_permissions(int flags, mode_t mask, uid_t uid, gid_t gid)
     return __valid_open_permissions(mask, flags, S_IROTH, S_IWOTH);
 }
 
-/// @brief Checks if the task is allowed to execture the file
-/// @param task the task to exectue the file.
-/// @param file the file to exectue.
+/// @brief Checks if the task is allowed to execute the file
+/// @param task the task to execute the file.
+/// @param file the file to execute.
 /// @return 1 on success, 0 otherwise.
 int vfs_valid_exec_permission(task_struct *task, vfs_file_t *file) {
     // Init, and all root processes may execute any file with a set execute bit
