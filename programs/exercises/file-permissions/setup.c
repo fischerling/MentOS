@@ -56,7 +56,8 @@ int main(int argc, char **argv)
 "Leider wurde nicht auf die Datei-Berechtigungen geachtet\n"
 "Schaffst du es, dass deine Geheimnisse sicher sind und\n"
 "du alle Geheimnisse von bob erfaehrst?\n\n"
-"Hilfreiche Programme: chmod, chown, stat, ls, (echo, cp)\n"
+"Hilfreiche Programme: chmod, chown, stat, ls\n"
+"Hinweis: Befehle in der Datei ~/.shellrc werden beim Login ausgefuehrt.\n"
 "Überprüfe deinen Fortschritt mit dem checkup Befehl der Aufgabe\n");
 
 
