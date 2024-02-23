@@ -1,1 +1,7 @@
-Call `man` to have a list of all the commands.
+Willkommen in SOS, dem School Operating System.
+
+Fuer eine Liste aller verfuegbaren Programme,
+tippe `man` und druecke die Enter-Taste.
+
+Die in SOS enthaltenen Aufgaben findest du unter
+/usr/bin/exercises.
