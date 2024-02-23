@@ -22,9 +22,9 @@ int main(int argc, char **argv)
     }
 
     // Set dangerously permissive permissions for the home directories
-    chmod("/home/alice", 777);
+    chmod("/home/alice", 0777);
     // Bob does not allow others to read his home directory
-    chmod("/home/bob", 773);
+    chmod("/home/bob", 0773);
 
     int fd;
     int creat_flags = O_CREAT | O_TRUNC | O_WRONLY;
@@ -58,7 +58,7 @@ int main(int argc, char **argv)
 "du alle Geheimnisse von bob erfaehrst?\n\n"
 "Hilfreiche Programme: chmod, chown, stat, ls\n"
 "Hinweis: Befehle in der Datei ~/.shellrc werden beim Login ausgefuehrt.\n"
-"Überprüfe deinen Fortschritt mit dem checkup Befehl der Aufgabe\n");
+"Ueberpruefe deinen Fortschritt mit dem checkup Befehl der Aufgabe\n");
 
 
     return 0;
