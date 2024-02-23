@@ -9,7 +9,6 @@
 #include <libgen.h>
 #include <sys/stat.h>
 #include <signal.h>
-#include <io/debug.h>
 #include <io/ansi_colors.h>
 #include <sys/bitops.h>
 #include <stdbool.h>
@@ -22,6 +21,9 @@
 #include <limits.h>
 #include <sys/utsname.h>
 #include <ctype.h>
+
+#define __DEBUG_LEVEL__ LOGLEVEL_DEBUG
+#include <io/debug.h>
 
 /// Maximum length of commands.
 #define CMD_LEN 64
@@ -818,6 +820,8 @@ static int __execute_cmd(char* command, bool_t add_to_history)
     if (_argc == 0) {
         return 0;
     }
+
+    pr_debug("Execute '%s'\n", command);
 
     // Add the command to the history.
     if (add_to_history) {
