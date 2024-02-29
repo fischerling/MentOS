@@ -91,7 +91,7 @@ jobs:
               uses: actions/checkout@v4
 
             - name: Install test dependencies
-              run: sudo apt-get install -y nasm qemu-system-x86 mtools
+              run: sudo apt-get install -y nasm qemu-system-x86 mtools e2fsprogs
 
             - name: Run tests
               run: |
@@ -101,3 +101,6 @@ jobs:
             - name: Check
               run: |
                   cat build/test.log | scripts/tapview
+
+            - name: Check the ext2 filesystem for errors
+              run: fsck.ext2 -fn build/rootfs.img
