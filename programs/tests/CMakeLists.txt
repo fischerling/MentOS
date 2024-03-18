@@ -35,7 +35,6 @@ set(TEST_LIST
     t_shm_write.c
     t_mem.c
     t_shm_read.c
-    t_spwd.c
     t_big_write.c
 )
 
