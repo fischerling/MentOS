@@ -1,0 +1,2 @@
+# append the exercises directory to PATH
+export PATH=$PATH:/usr/bin/exercises
