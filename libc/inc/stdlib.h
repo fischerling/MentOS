@@ -97,3 +97,8 @@ unsigned randuint(unsigned lb, unsigned ub);
 /// @param ub the upper-bound value.
 /// @return the random value.
 float randfloat(float lb, float ub);
+
+/// @brief Execute a shell command
+/// @param command the command to execute.
+/// @return non-zero if command is NULL, the commands exit status or -1 on error.
+int system(const char *command);

@@ -3,25 +3,26 @@
 /// @copyright (c) 2014-2024 This file is distributed under the MIT License.
 /// See LICENSE.md for details.
 
-#include <sys/unistd.h>
-#include <sys/wait.h>
+#include <err.h>
+#include <ctype.h>
 #include <fcntl.h>
-#include <libgen.h>
-#include <sys/stat.h>
-#include <signal.h>
-#include <io/debug.h>
 #include <io/ansi_colors.h>
-#include <sys/bitops.h>
+#include <io/debug.h>
+#include <libgen.h>
+#include <limits.h>
+#include <signal.h>
 #include <stdbool.h>
 #include <stddef.h>
-#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <strerror.h>
-#include <termios.h>
-#include <limits.h>
+#include <string.h>
+#include <sys/bitops.h>
+#include <sys/stat.h>
+#include <sys/unistd.h>
 #include <sys/utsname.h>
-#include <ctype.h>
+#include <sys/wait.h>
+#include <termios.h>
 
 /// Maximum length of commands.
 #define CMD_LEN 64
@@ -980,17 +981,19 @@ int main(int argc, char *argv[])
         __cd(0, NULL);
         __interactive_mode();
     } else {
-        // check file arguments
         for (int i = 1; i < argc; ++i) {
-            stat_t buf;
-            if (stat(argv[i], &buf) < 0) {
-                printf("%s: No such file\n", argv[i]);
-                exit(1);
-            }
-        }
+            if (strcmp(argv[i], "-c") == 0) {
+                if (i+1 == argc) {
+                    errx(2, "%s: -c: option requires an argument", argv[0]);
+                }
 
-        for (int i = 1; i < argc; ++i) {
-            if (!(status = __execute_file(argv[i]))) {
+                if (!(status = __execute_cmd(argv[i+1], false))) {
+                    return status;
+                }
+                // Skip the next argument
+                i++;
+            }
+            else if (!(status = __execute_file(argv[i]))) {
                 return status;
             }
         }
