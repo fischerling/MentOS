@@ -27,3 +27,6 @@ chmod +s "${ROOT}"/usr/bin/exercises/*/checkup
 chown 1000:1000 -R "${ROOT}"/home/alice
 chown 1001:1001 -R "${ROOT}"/home/bob
 chmod -R u=rwX,go= -R "${ROOT}"/home/*
+
+# Make intro dir writable
+chown 1000:1000 "${ROOT}"/var/lib/intro/1000
