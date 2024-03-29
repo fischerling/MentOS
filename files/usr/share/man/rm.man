@@ -1,0 +1,9 @@
+SYNOPSIS
+    rm FILE...
+
+DESCRIPTION
+    Remove one or more files.
+    The wildcard symbol '*' for all files in a directory is supported.
+
+OPTIONS
+    --help   shows command help.
