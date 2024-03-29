@@ -3,8 +3,8 @@
 /// @copyright (c) 2014-2024 This file is distributed under the MIT License.
 /// See LICENSE.md for details.
 
-#include <err.h>
 #include <ctype.h>
+#include <err.h>
 #include <fcntl.h>
 #include <io/ansi_colors.h>
 #include <io/debug.h>
@@ -34,6 +34,9 @@
 static int status = 0;
 // Store the last command status as string
 static char status_buf[4] = { 0 };
+
+static int __cmd_argc;
+static char **__cmd_argv;
 
 static sigset_t oldmask;
 
@@ -177,11 +180,12 @@ static char *__getenv(const char *var)
         return status_buf;
     }
 
-    // TODO: implement access to argv
-    /* int arg = strtol(var, NULL, 10); */
-    /* if (arg < argc) { */
-    /* return argv[arg]; */
-    /* } */
+    if (isdigit(*var)) {
+        int arg = atoi(var);
+        if (arg < __cmd_argc) {
+            return __cmd_argv[arg];
+        }
+    }
 
     return NULL;
 }
@@ -515,8 +519,7 @@ static int __execute_cmd(char* command)
             __setup_redirects(&_argc, &_argv);
 
             if (execvp(_argv[0], _argv) == -1) {
-                printf("\nUnknown command: %s\n", _argv[0]);
-                exit(127);
+                errx(127, "\nUnknown command: %s", _argv[0]);
             }
         }
         if (blocking) {
@@ -543,8 +546,7 @@ static int __execute_file(char *path)
 {
     int fd;
     if ((fd = open(path, O_RDONLY, 0)) == -1) {
-        printf("%s: %s\n", path, strerror(errno));
-        return -errno;
+        return -1;
     }
     char cmd[BUFSIZ];
     while (fgets(cmd, sizeof(cmd), fd)) {
@@ -567,7 +569,7 @@ static void __interactive_mode(void)
     if (stat(".shellrc", &buf) == 0) {
         int ret = __execute_file(".shellrc");
         if (ret < 0) {
-            printf("%s: .shellrc: %s\n", strerror(-ret));
+            printf("%s: .shellrc: %s\n", strerror(errno));
         }
     }
     // Enable the readline history
@@ -641,9 +643,15 @@ int main(int argc, char *argv[])
                 }
                 // Skip the next argument
                 i++;
-            }
-            else if (!(status = __execute_file(argv[i]))) {
-                return status;
+            } else { // Execute the argument as command file
+                __cmd_argc = argc - i;
+                __cmd_argv = &argv[i];
+
+                int ret = __execute_file(argv[i]);
+                if (ret < 0) {
+                    err(126, "%s: %s", argv[0], argv[i]);
+                }
+                return ret;
             }
         }
     }
