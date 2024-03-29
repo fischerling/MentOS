@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <io/debug.h>
 #include <io/ansi_colors.h>
+#include <readpasswd.h>
 
 #include <sys/mman.h>
 #include <sys/wait.h>
@@ -44,17 +45,6 @@ static inline int __setup_env(passwd_t *pwd)
     return 1;
 }
 
-static inline void __set_io_flags(unsigned flag, bool_t active)
-{
-    struct termios _termios;
-    tcgetattr(STDIN_FILENO, &_termios);
-    if (active)
-        _termios.c_lflag |= flag;
-    else
-        _termios.c_lflag &= ~flag;
-    tcsetattr(STDIN_FILENO, 0, &_termios);
-}
-
 static inline void __print_message_file(const char *file)
 {
     char buffer[256];
@@ -73,82 +63,6 @@ static inline void __print_message_file(const char *file)
     close(fd);
     if (total > 0)
         printf("\n");
-}
-
-/// @brief Gets the inserted command.
-static inline bool_t __get_input(char *input, size_t max_len, bool_t hide)
-{
-    size_t index = 0;
-    int c;
-    bool_t result = false;
-
-    __set_io_flags(ICANON, false);
-    if (hide)
-        __set_io_flags(ECHO, false);
-
-    memset(input, 0, max_len);
-    do {
-        c = getchar();
-        // Return Key
-        if (c == '\n') {
-            input[index] = 0;
-            result       = true;
-            break;
-        } else if (c == '\033') {
-            c = getchar();
-            if (c == '[') {
-                getchar(); // Get the char, and ignore it.
-            } else if (c == '^') {
-                c = getchar(); // Get the char.
-                if (c == 'C') {
-                    // However, the ISR of the keyboard has already put the char.
-                    // Thus, delete it by using backspace.
-                    if (!hide) {
-                        putchar('\b');
-                        putchar('\b');
-                        putchar('\n');
-                    }
-                    result = false;
-                    break;
-                } else if (c == 'U') {
-                    if (!hide) {
-                        // However, the ISR of the keyboard has already put the char.
-                        // Thus, delete it by using backspace.
-                        putchar('\b');
-                        putchar('\b');
-                        // Clear the current command.
-                        for (size_t it = 0; it < index; ++it) {
-                            putchar('\b');
-                        }
-                    }
-                    index = 0;
-                }
-            }
-        } else if (c == '\b') {
-            if (index > 0) {
-                if (!hide)
-                    putchar('\b');
-                --index;
-            }
-        } else if (c == 0) {
-            // Do nothing.
-        } else {
-            input[index++] = c;
-            if (index == (max_len - 1)) {
-                input[index] = 0;
-                result       = true;
-                break;
-            }
-        }
-    } while (index < max_len);
-
-    if (hide) {
-        __set_io_flags(ECHO, true);
-        putchar('\n');
-    }
-    __set_io_flags(ICANON, true);
-
-    return result;
 }
 
 int main(int argc, char **argv)
@@ -176,14 +90,9 @@ int main(int argc, char **argv)
     char username[CREDENTIALS_LENGTH], password[CREDENTIALS_LENGTH];
     do {
         // Get the username.
-        do {
-            printf("Username: ");
-        } while (!__get_input(username, sizeof(username), false));
+        while (!readpasswd("Username: ", username, sizeof(username), RPWD_ECHO_ON));
 
-        // Get the password.
-        do {
-            printf("Password: ");
-        } while (!__get_input(password, sizeof(password), true));
+        while (!readpasswd("Password: ", password, sizeof(password), 0));
 
         // Check if we can find the user.
         if ((pwd = getpwnam(username)) == NULL) {
