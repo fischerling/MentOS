@@ -1,14 +1,20 @@
 /// @file readline.h
-/// @brief
-/// @copyright (c) 2014-2024 This file is distributed under the MIT License.
+/// @brief Get a line from a user with editing
+/// @copyright (c) 2024 Florian Fischer
+/// This file is distributed under the MIT License.
 /// See LICENSE.md for details.
 
-#include "stddef.h"
+#pragma once
 
-/// @brief Reads a line from the file.
-/// @param fd the file descriptor.
-/// @param buffer the buffer where we place the line.
-/// @param buflen the length of the buffer.
-/// @param readlen the amount we read, if negative, we did not encounter a newline.
-/// @return 0 if we are done reading, 1 if we encountered a newline, -1 if otherwise.
-int readline(int fd, char *buffer, size_t buflen, ssize_t *read_len);
+/// @brief  Read a line from the terminal an return it.
+/// @param  prompt the prompt to issue.
+/// @return The line inserted by the user. The line is allocated using malloc
+///         and must be freed. The final new line is stripped from the string.
+char* readline(const char *prompt);
+
+/// @brief  Use the readline history
+void using_history(void);
+
+/// @brief  Function pointer used to complete words
+void (*readline_complete_func)(void);
+
