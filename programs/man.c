@@ -3,8 +3,10 @@
 /// @copyright (c) 2014-2024 This file is distributed under the MIT License.
 /// See LICENSE.md for details.
 
+#include <err.h>
 #include <fcntl.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <strerror.h>
 #include <string.h>
 #include <dirent.h>
@@ -49,8 +51,7 @@ int main(int argc, char *argv[])
         int fd = open(filepath, O_RDONLY, 42);
         if (fd < 0)
         {
-            printf("%s: No manual entry for %s\n", argv[0], argv[1]);
-            exit(1);
+            errx(EXIT_FAILURE, "%s: No manual entry for %s\n", argv[0], argv[1]);
         }
         close(fd);
         execlp(pager, pager, filepath, NULL);
