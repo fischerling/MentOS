@@ -8,6 +8,7 @@
 #include <fcntl.h>
 #include <grp.h>
 #include <pwd.h>
+#include <readpasswd.h>
 #include <shadow.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -21,17 +22,6 @@
 #define CREDENTIALS_LENGTH 50
 
 #define DOAS_CONFIG "/etc/doas.conf"
-
-static inline void __set_io_flags(unsigned flag, bool_t active)
-{
-    struct termios _termios;
-    tcgetattr(STDIN_FILENO, &_termios);
-    if (active)
-        _termios.c_lflag |= flag;
-    else
-        _termios.c_lflag &= ~flag;
-    tcsetattr(STDIN_FILENO, 0, &_termios);
-}
 
 static inline int __check_identity(char *identity, passwd_t *pwd)
 {
@@ -104,62 +94,6 @@ done:
     return ret;
 }
 
-/// @brief Read a password from stdin
-static inline bool_t __get_passwd(char *input, size_t max_len)
-{
-    size_t index = 0;
-    int c;
-    bool_t result = false;
-
-    __set_io_flags(ICANON, false);
-    __set_io_flags(ECHO, false);
-
-    memset(input, 0, max_len);
-    do {
-        c = getchar();
-        // Return Key
-        if (c == '\n') {
-            input[index] = 0;
-            result       = true;
-            break;
-        } else if (c == '\033') {
-            c = getchar();
-            if (c == '[') {
-                c = getchar(); // Get the char, and ignore it.
-            } else if (c == '^') {
-                c = getchar(); // Get the char.
-                if (c == 'C') {
-                    // However, the ISR of the keyboard has already put the char.
-                    // Thus, delete it by using backspace.
-                    result = false;
-                    break;
-                } else if (c == 'U') {
-                    index = 0;
-                }
-            }
-        } else if (c == '\b') {
-            if (index > 0) {
-                --index;
-            }
-        } else if (c == 0) {
-            // Do nothing.
-        } else {
-            input[index++] = c;
-            if (index == (max_len - 1)) {
-                input[index] = 0;
-                result       = true;
-                break;
-            }
-        }
-    } while (index < max_len);
-
-    __set_io_flags(ECHO, true);
-    putchar('\n');
-    __set_io_flags(ICANON, true);
-
-    return result;
-}
-
 int main(int argc, char **argv)
 {
     if (argc == 1) {
@@ -200,9 +134,7 @@ int main(int argc, char **argv)
     bool_t passwd_ok = false;
     for (int i = 0; i < 3; ++i) {
         // Get the password.
-        do {
-            printf("Password: ");
-        } while (!__get_passwd(password, CREDENTIALS_LENGTH));
+        while (!readpasswd("Password: ", password, sizeof(password), 0));
 
         // Check if the password is correct.
         if (strcmp(spwd->sp_pwdp, password) != 0) {

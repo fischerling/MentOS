@@ -19,6 +19,7 @@ add_library(
     ${CMAKE_SOURCE_DIR}/libc/src/math.c
     ${CMAKE_SOURCE_DIR}/libc/src/pwd.c
     ${CMAKE_SOURCE_DIR}/libc/src/readline.c
+    ${CMAKE_SOURCE_DIR}/libc/src/readpasswd.c
     ${CMAKE_SOURCE_DIR}/libc/src/sched.c
     ${CMAKE_SOURCE_DIR}/libc/src/setenv.c
     ${CMAKE_SOURCE_DIR}/libc/src/shadow.c
