@@ -1,5 +1,6 @@
 # List of programs.
 set(PROGRAM_LIST
+    head.c
     cp.c
     doas.c
     runtests.c
