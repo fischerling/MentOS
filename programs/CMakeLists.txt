@@ -1,5 +1,6 @@
 # List of programs.
 set(PROGRAM_LIST
+    apropos.c
     fgrep.c
     head.c
     cp.c
