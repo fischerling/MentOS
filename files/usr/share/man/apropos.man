@@ -1,0 +1,5 @@
+SYNOPSIS
+    apropos KEYWORD
+
+DESCRIPTION
+    Search all available manual pages for KEYWORD and print matching pages.
