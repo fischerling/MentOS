@@ -1,5 +1,6 @@
 # List of programs.
 set(PROGRAM_LIST
+    fgrep.c
     head.c
     cp.c
     doas.c
