@@ -1,0 +1,14 @@
+SYNOPSIS
+    fgrep [OPTIONS] KEYWORD [FILE]...
+
+DESCRIPTION
+    Search for KEYWORD in each FILE.
+    
+OPTIONS
+    -h, --help    shows command help.
+    -A NUM        print NUM lines after a match.
+    -B NUM        print NUM lines before a match.
+    -C NUM        print NUM lines before and after a match.
+    -l            print only the file names of matching files.
+    -H            always prepend the file name to the output
+    -n            always prepend the line number to the output
