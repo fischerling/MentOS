@@ -169,6 +169,19 @@ static inline void __prompt_print(void)
            USER, HOSTNAME, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec, CWD);
 }
 
+static inline void __status_print(int _status)
+{
+    if (WIFSIGNALED(_status)) {
+        printf(FG_RED "\nExit status %d, killed by signal %d\n" FG_RESET,
+               WEXITSTATUS(_status), WTERMSIG(_status));
+    } else if (WIFSTOPPED(_status)) {
+        printf(FG_YELLOW "\nExit status %d, stopped by signal %d\n" FG_RESET,
+               WEXITSTATUS(_status), WSTOPSIG(_status));
+    } else if (WEXITSTATUS(_status) != 0) {
+        printf(FG_RED "\nExit status %d\n" FG_RESET, WEXITSTATUS(_status));
+    }
+}
+
 static char *__getenv(const char *var)
 {
     if (strlen(var) > 1) {
@@ -524,22 +537,12 @@ static int __execute_cmd(char* command)
         }
         if (blocking) {
             waitpid(cpid, &_status, 0);
-            if (WIFSIGNALED(_status)) {
-                printf(FG_RED "\nExit status %d, killed by signal %d\n" FG_RESET,
-                       WEXITSTATUS(_status), WTERMSIG(_status));
-            } else if (WIFSTOPPED(_status)) {
-                printf(FG_YELLOW "\nExit status %d, stopped by signal %d\n" FG_RESET,
-                       WEXITSTATUS(_status), WSTOPSIG(_status));
-            } else if (WEXITSTATUS(_status) != 0) {
-                printf(FG_RED "\nExit status %d\n" FG_RESET, WEXITSTATUS(_status));
-            }
         }
         __unblock_sigchld();
     }
     // Free up the memory reserved for the arguments.
     __free_argv(_argc, _argv);
-    status = WEXITSTATUS(_status);
-    return status;
+    return _status;
 }
 
 static int __execute_file(char *path)
@@ -555,7 +558,7 @@ static int __execute_file(char *path)
         }
 
         if ((status = __execute_cmd(cmd)) != 0) {
-            printf("\n%s: exited with %d\n", cmd, status);
+            __status_print(status);
         }
     }
 
@@ -581,8 +584,10 @@ static void __interactive_mode(void)
         __prompt_print();
         // Get the input command.
         char *cmd = readline(NULL);
-        __execute_cmd(cmd);
+        status = __execute_cmd(cmd);
         free(cmd);
+        // Print the status
+        __status_print(status);
     }
 #pragma clang diagnostic pop
 }
@@ -656,5 +661,5 @@ int main(int argc, char *argv[])
         }
     }
 
-    return 0;
+    return status;
 }
