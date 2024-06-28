@@ -69,6 +69,10 @@ static inline int __check_permission(int argc, char *argv[], passwd_t *pwd)
         if (line[strlen(line) -1] == '\n')
             line[strlen(line) -1] = 0;
 
+        // ignore lines starting with #
+        if (line[0] == '#')
+            continue;
+
         char *modifier = strtok(line, " ");
         if (modifier == NULL)
            continue;

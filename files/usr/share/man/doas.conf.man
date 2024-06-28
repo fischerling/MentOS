@@ -1,0 +1,23 @@
+NAME
+    doas.conf - doas configuration file
+
+DESCRIPTION
+    The doas utility executes commands as the root user according to the rules
+    in the doas.conf configuration file.
+
+    The rules have the following format:
+      permit identity
+
+    Rules consist of the following parts:
+      permit
+        The action to be taken if this rule matches.
+
+      identity
+        The username to match.
+        Groups may be specified by prepending a colon (‘:’).
+        Numeric IDs are not accepted.
+
+    The last matching rule determines the action taken.
+    If no rule matches, the action is denied.
+
+    Lines starting with ‘#’ are ignored.
