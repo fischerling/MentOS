@@ -33,6 +33,17 @@ static inline void __set_io_flags(unsigned flag, bool_t active)
     tcsetattr(STDIN_FILENO, 0, &_termios);
 }
 
+static inline void __print_lecture(void)
+{
+    printf(
+"We trust you have received the usual lecture from the System Administrator.\n"
+"It usually boils down to these three things:\n"
+"#1) Respect the privacy of others.\n"
+"#2) Think before you type.\n"
+"#3) With great power comes great responsibility.\n\n"
+    );
+}
+
 static inline int __check_identity(char *identity, passwd_t *pwd)
 {
     char *user, *group;
@@ -195,6 +206,8 @@ int main(int argc, char **argv)
     if (__check_permission(argc - 1, &argv[1], pwd)) {
         errx(EXIT_FAILURE, "User %s not allowed to use doas\n", pwd->pw_name);
     }
+
+    __print_lecture();
 
     struct spwd *spwd;
     if ((spwd = getspnam(pwd->pw_name)) == NULL) {
