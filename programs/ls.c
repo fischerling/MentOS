@@ -80,22 +80,26 @@ static inline void print_dir_entry(dirent_t *dirent, const char *path, unsigned 
         if (bitmask_check(flags, FLAG_I)) {
             printf("%6d ", dirent->d_ino);
         }
-        // Print the file type.
-        putchar(dt_char_array[dirent->d_type]);
-        // Print the access permissions.
-        putchar(bitmask_check(dstat.st_mode, S_IRUSR) ? 'r' : '-');
-        putchar(bitmask_check(dstat.st_mode, S_IWUSR) ? 'w' : '-');
-        putchar(bitmask_check(dstat.st_mode, S_IXUSR) ? 'x' : '-');
-        putchar(bitmask_check(dstat.st_mode, S_IRGRP) ? 'r' : '-');
-        putchar(bitmask_check(dstat.st_mode, S_IWGRP) ? 'w' : '-');
-        putchar(bitmask_check(dstat.st_mode, S_IXGRP) ? 'x' : '-');
-        putchar(bitmask_check(dstat.st_mode, S_IROTH) ? 'r' : '-');
-        putchar(bitmask_check(dstat.st_mode, S_IWOTH) ? 'w' : '-');
-        putchar(bitmask_check(dstat.st_mode, S_IXOTH) ? 'x' : '-');
-        // Add a space.
-        putchar(' ');
-        // Print the rest.
-        printf("%4d %4d %11s %02d/%02d %02d:%02d ",
+
+        // Build the access permission string.
+        char mode[] = "----------";
+        mode[0] = dt_char_array[dirent->d_type];
+        if (dstat.st_mode & S_IRUSR) mode[1] = 'r';
+        if (dstat.st_mode & S_IWUSR) mode[2] = 'w';
+        if (dstat.st_mode & S_IXUSR) mode[3] = 'x';
+        if (dstat.st_mode & S_IRGRP) mode[4] = 'r';
+        if (dstat.st_mode & S_IWGRP) mode[5] = 'w';
+        if (dstat.st_mode & S_IXGRP) mode[6] = 'x';
+        if (dstat.st_mode & S_IROTH) mode[7] = 'r';
+        if (dstat.st_mode & S_IWOTH) mode[8] = 'w';
+        if (dstat.st_mode & S_IXOTH) mode[9] = 'x';
+
+        if (dstat.st_mode & S_ISUID) mode[3] = (mode[3] == 'x') ? 's' : 'S';
+        if (dstat.st_mode & S_ISGID) mode[6] = (mode[6] == 'x') ? 's' : 'S';
+        if (dstat.st_mode & S_ISVTX) mode[9] = (mode[9] == 'x') ? 't' : 'T';
+
+        printf("%s %4d %4d %11s %02d/%02d %02d:%02d %s\n",
+               mode,
                dstat.st_uid,
                dstat.st_gid,
                to_human_size(dstat.st_size),

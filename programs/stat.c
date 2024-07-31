@@ -68,17 +68,35 @@ int main(int argc, char **argv)
     case S_IFSOCK: printf("socket\n"); break;
     default      : printf("unknown?\n"); break;
     }
-    printf("Access: (%.4o/", dstat.st_mode & 0xFFF);
-    // Print the access permissions.
-    putchar(bitmask_check(dstat.st_mode, S_IRUSR) ? 'r' : '-');
-    putchar(bitmask_check(dstat.st_mode, S_IWUSR) ? 'w' : '-');
-    putchar(bitmask_check(dstat.st_mode, S_IXUSR) ? 'x' : '-');
-    putchar(bitmask_check(dstat.st_mode, S_IRGRP) ? 'r' : '-');
-    putchar(bitmask_check(dstat.st_mode, S_IWGRP) ? 'w' : '-');
-    putchar(bitmask_check(dstat.st_mode, S_IXGRP) ? 'x' : '-');
-    putchar(bitmask_check(dstat.st_mode, S_IROTH) ? 'r' : '-');
-    putchar(bitmask_check(dstat.st_mode, S_IWOTH) ? 'w' : '-');
-    putchar(bitmask_check(dstat.st_mode, S_IXOTH) ? 'x' : '-');
+
+    // Build the access permissions string.
+    char mode[] = "----------";
+    switch (dstat.st_mode & S_IFMT) {
+    case S_IFBLK : mode[0] = 'b'; break;
+    case S_IFCHR : mode[0] = 'v'; break;
+    case S_IFDIR : mode[0] = 'f'; break;
+    case S_IFIFO : mode[0] = 'p'; break;
+    case S_IFLNK : mode[0] = 'l'; break;
+    case S_IFREG : mode[0] = '-'; break;
+    case S_IFSOCK: mode[0] = 's'; break;
+    default      : mode[0] = '?'; break;
+    }
+
+    if (dstat.st_mode & S_IRUSR) mode[1] = 'r';
+    if (dstat.st_mode & S_IWUSR) mode[2] = 'w';
+    if (dstat.st_mode & S_IXUSR) mode[3] = 'x';
+    if (dstat.st_mode & S_IRGRP) mode[4] = 'r';
+    if (dstat.st_mode & S_IWGRP) mode[5] = 'w';
+    if (dstat.st_mode & S_IXGRP) mode[6] = 'x';
+    if (dstat.st_mode & S_IROTH) mode[7] = 'r';
+    if (dstat.st_mode & S_IWOTH) mode[8] = 'w';
+    if (dstat.st_mode & S_IXOTH) mode[9] = 'x';
+
+    if (dstat.st_mode & S_ISUID) mode[3] = (mode[3] == 'x') ? 's' : 'S';
+    if (dstat.st_mode & S_ISGID) mode[6] = (mode[6] == 'x') ? 's' : 'S';
+    if (dstat.st_mode & S_ISVTX) mode[9] = (mode[9] == 'x') ? 't' : 'T';
+
+    printf("Access: (%.4o/%s)", dstat.st_mode & 0xFFF, mode);
 
     passwd_t *user = getpwuid(dstat.st_uid);
     if (!user) {
@@ -90,8 +108,7 @@ int main(int argc, char **argv)
         printf("%s: failed to retrieve gid '%u'.\n", argv[0], dstat.st_gid);
         exit(1);
     }
-    printf(") Uid: (%d/%s) Gid: (%d/%s)\n", dstat.st_uid, user->pw_name, dstat.st_gid, group->gr_name);
-
+    printf(" Uid: (%d/%s) Gid: (%d/%s)\n", dstat.st_uid, user->pw_name, dstat.st_gid, group->gr_name);
     __print_time("Access: ", &dstat.st_atime);
     __print_time("Modify: ", &dstat.st_mtime);
     __print_time("Change: ", &dstat.st_ctime);
