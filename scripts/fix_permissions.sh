@@ -18,10 +18,10 @@ chmod -R a+rx "${ROOT}"/bin
 chmod 644 "${ROOT}"/etc/passwd
 chmod og-rwx "${ROOT}"/etc/shadow
 
-# Set suid on doas
-sudo chmod +s "${ROOT}"/bin/doas
-chmod +s "${ROOT}"/usr/bin/exercises/*/setup
-chmod +s "${ROOT}"/usr/bin/exercises/*/checkup
+# Set SUID on doas
+sudo chmod u+s "${ROOT}"/bin/doas
+chmod u+s "${ROOT}"/usr/bin/exercises/*/setup
+chmod u+s "${ROOT}"/usr/bin/exercises/*/checkup
 
 # Set user permissions
 chown 1000:1000 -R "${ROOT}"/home/alice
