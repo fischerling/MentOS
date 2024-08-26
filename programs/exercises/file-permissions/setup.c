@@ -14,8 +14,8 @@
 
 #define ALICE 1000
 
-#define R(s) FG_RED s FG_WHITE
-#define WB(s) FG_WHITE_BRIGHT s FG_WHITE
+#define R(s) FG_RED s FG_RESET
+#define WB(s) FG_WHITE_BRIGHT s FG_RESET
 
 #define CREAT_FLAGS (O_CREAT | O_TRUNC | O_WRONLY)
 // World readable and writable
