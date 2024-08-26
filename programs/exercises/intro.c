@@ -17,8 +17,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#define R(s) FG_RED s FG_WHITE
-#define WB(s) FG_WHITE_BRIGHT s FG_WHITE
+#define R(s) FG_RED s FG_RESET
+#define WB(s) FG_WHITE_BRIGHT s FG_RESET
 
 /*
  * Steps:
