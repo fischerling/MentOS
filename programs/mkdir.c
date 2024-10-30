@@ -3,7 +3,9 @@
 /// @copyright (c) 2014-2024 This file is distributed under the MIT License.
 /// See LICENSE.md for details.
 
+#include <err.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <fcntl.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -24,8 +26,7 @@ int main(int argc, char *argv[])
         return 0;
     }
     if (mkdir(argv[1], S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH)) {
-        printf("mkdir: cannot create directory '%s': %s\n", argv[1], strerror(errno));
+        err(EXIT_FAILURE, "%s: cannot create directory '%s'", argv[0], argv[1]);
     }
-    putchar('\n');
     return 0;
 }
