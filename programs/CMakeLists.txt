@@ -1,3 +1,6 @@
+# Add the shadow encryption option.
+option(ENCRYPTED_SHADOW "Expect the shadow entries to be encrypted using SHA256." ON)
+
 # List of programs.
 set(PROGRAM_LIST
     cat.c

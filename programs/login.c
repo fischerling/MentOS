@@ -274,6 +274,7 @@ int main(int argc, char **argv)
             continue; // Retry if unable to get shadow password
         }
 
+#ifdef ENCRYPTED_SHADOW
         unsigned char hash[SHA256_BLOCK_SIZE]       = { 0 };
         char hash_string[SHA256_BLOCK_SIZE * 2 + 1] = { 0 };
         SHA256_ctx_t ctx;
@@ -283,7 +284,10 @@ int main(int argc, char **argv)
         }
         sha256_final(&ctx, hash);
         sha256_bytes_to_hex(hash, SHA256_BLOCK_SIZE, hash_string, SHA256_BLOCK_SIZE * 2 + 1);
-
+#else
+        // Shadow is not encrypted we can compare the passwords directly
+        char* hash_string = password;
+#endif
         // Verify the password against the stored hash
         if (strcmp(shadow->sp_pwdp, hash_string) != 0) {
             printf("Wrong password.\n");
