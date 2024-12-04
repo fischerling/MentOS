@@ -64,7 +64,7 @@ int main(int argc, char **argv)
 
 next_word:
         // Add space if there are more words and the last word did not end with a new line
-        if ((*(argv+1) != NULL) && *(buf-1) != '\n') {
+        if ((*(argv+1) != NULL) && !(buf > buffer && *(buf-1) == '\n')) {
             putchar(' ');
         }
         // reset buf pointer
