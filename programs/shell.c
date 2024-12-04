@@ -3,6 +3,7 @@
 /// @copyright (c) 2014-2024 This file is distributed under the MIT License.
 /// See LICENSE.md for details.
 
+#include <err.h>
 #include <unistd.h>
 #include <sys/wait.h>
 #include <fcntl.h>
@@ -1225,10 +1226,12 @@ static void __setup_redirects(int *argcp, char ***argvp)
         close(fd); // Close the file descriptor after redirection.
         break;     // Stop after handling one redirection.
     }
-} /// @brief Executes the command stored in the history entry.
-/// @param entry The history entry containing the command.
+}
+
+/// @brief Executes a given command.
+/// @param command The command to execute.
 /// @return Returns the exit status of the command.
-static int __execute_command(rb_history_entry_t *entry)
+static int __execute_command(char *command)
 {
     int _status = 0;
 
@@ -1236,7 +1239,7 @@ static int __execute_command(rb_history_entry_t *entry)
     int _argc = 1; // Initialize the argument count.
     char **_argv;  // Argument vector.
 
-    __alloc_argv(entry->buffer, &_argc, &_argv);
+    __alloc_argv(command, &_argc, &_argv);
 
     // Check if the command is empty (no arguments parsed).
     if (_argc == 0) {
@@ -1308,20 +1311,19 @@ static int __execute_command(rb_history_entry_t *entry)
 
 static int __execute_file(char *path)
 {
-    rb_history_entry_t entry;
-    rb_history_init_entry(&entry);
+    char command_buffer[CMD_LEN];
     int fd;
     if ((fd = open(path, O_RDONLY, 0)) == -1) {
         printf("%s: %s\n", path, strerror(errno));
         return -errno;
     }
-    while (fgets(entry.buffer, entry.size, fd)) {
-        if (entry.buffer[0] == '#') {
+    while (fgets(command_buffer, sizeof(command_buffer), fd)) {
+        if (command_buffer[0] == '#') {
             continue;
         }
 
-        if ((status = __execute_command(&entry)) != 0) {
-            printf("\n%s: exited with %d\n", entry.buffer, status);
+        if ((status = __execute_command(command_buffer)) != 0) {
+            printf("\n%s: exited with %d\n", command_buffer, status);
         }
     }
 
@@ -1374,7 +1376,7 @@ static void __interactive_mode(void)
         }
 
         // Execute the command.
-        __execute_command(&entry);
+        __execute_command(entry.buffer);
     }
 #pragma clang diagnostic pop
 }
@@ -1423,15 +1425,18 @@ int main(int argc, char *argv[])
     } else {
         // check file arguments
         for (int i = 1; i < argc; ++i) {
-            stat_t buf;
-            if (stat(argv[i], &buf) < 0) {
-                printf("%s: No such file\n", argv[i]);
-                exit(1);
-            }
-        }
+            if (strcmp(argv[i], "-c") == 0) {
+                if (i+1 == argc) {
+                    errx(2, "%s: -c: option requires an argument", argv[0]);
+                }
 
-        for (int i = 1; i < argc; ++i) {
-            if (!(status = __execute_file(argv[i]))) {
+                if (!(status = __execute_command(argv[i+1]))) {
+                    return status;
+                }
+                // Skip the next argument
+                i++;
+            }
+            else if (!(status = __execute_file(argv[i]))) {
                 return status;
             }
         }
