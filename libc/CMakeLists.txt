@@ -29,6 +29,7 @@ add_library(
     ${CMAKE_SOURCE_DIR}/libc/src/stdlib.c
     ${CMAKE_SOURCE_DIR}/libc/src/strerror.c
     ${CMAKE_SOURCE_DIR}/libc/src/string.c
+    ${CMAKE_SOURCE_DIR}/libc/src/system.c
     ${CMAKE_SOURCE_DIR}/libc/src/sys/errno.c
     ${CMAKE_SOURCE_DIR}/libc/src/sys/ioctl.c
     ${CMAKE_SOURCE_DIR}/libc/src/sys/ipc.c

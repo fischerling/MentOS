@@ -101,3 +101,8 @@ float randfloat(float lb, float ub);
 /// @brief Wrapper for exit system call.
 /// @param status The exit status.
 void exit(int status);
+
+/// @brief Execute a shell command
+/// @param command the command to execute.
+/// @return non-zero if command is NULL, the commands exit status or -1 on error.
+int system(const char *command);
