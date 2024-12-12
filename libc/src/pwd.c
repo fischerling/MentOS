@@ -6,7 +6,6 @@
 #include "pwd.h"
 #include "assert.h"
 #include "fcntl.h"
-#include "readline.h"
 #include "stdio.h"
 #include "string.h"
 #include "errno.h"
@@ -66,7 +65,7 @@ static inline void __parse_line(passwd_t *pwd, char *buf)
 /// @return the buffer itself if we have found the entry, NULL otherwise.
 static inline char *__search_entry(int fd, char *buffer, int buflen, const char *name, uid_t uid)
 {
-    while (readline(fd, buffer, buflen, NULL) != 0) {
+    while (fgets(buffer, buflen, fd) != 0) {
         if (name != NULL) {
             char *name_end = strchr(buffer, ':');
             if (name_end) {
