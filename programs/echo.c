@@ -1,16 +1,17 @@
 /// @file echo.c
-/// @brief
+/// @brief display a line of text
 /// @copyright (c) 2014-2024 This file is distributed under the MIT License.
 /// See LICENSE.md for details.
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
 int main(int argc, char **argv)
 {
-    int newline = 1;
-    int eflag = 0;
+    bool_t newline = true;
+    bool_t eflag = false;
     char buffer[BUFSIZ];
     char *buf = buffer;
     char *arg;
@@ -24,9 +25,9 @@ int main(int argc, char **argv)
         // parse the options string
         while (*arg++) {
             if (*arg == 'n') {
-                newline = 0;
+                newline = false;
             } else if (*arg == 'e') {
-                eflag = '\\';
+                eflag = true;
             } else {
                 break;
             }
@@ -44,12 +45,15 @@ int main(int argc, char **argv)
         // Expand escape codes
         int c;
         while ((c = *arg++) != 0) {
-            if (c != eflag) {
+            if (c != '\\') {
                 *buf++ = c;
             } else {
                 switch (*arg) {
                 case 'n':
                     *buf++ = '\n';
+                    break;
+                case 'e':
+                    *buf++ = 0x1b;
                     break;
                 default:
                     *buf++ =  *(arg-1);
