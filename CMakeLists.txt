@@ -164,6 +164,7 @@ add_custom_target(filesystem
     COMMAND echo 'Creating EXT2 filesystem...'
     COMMAND echo '============================================================================='
     COMMAND mkdir -p ${CMAKE_SOURCE_DIR}/files/proc
+    COMMAND mkdir -p -m 777 ${CMAKE_SOURCE_DIR}/files/tmp
     COMMAND mkdir -p ${CMAKE_SOURCE_DIR}/files/dev
     COMMAND mkdir -p ${CMAKE_SOURCE_DIR}/files/usr/src
     COMMAND cp -r ${CMAKE_SOURCE_DIR}/mentos/src ${CMAKE_SOURCE_DIR}/files/usr/src/mentos

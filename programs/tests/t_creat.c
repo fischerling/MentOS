@@ -15,7 +15,7 @@
 
 int main(int argc, char *argv[])
 {
-    char *filename      = "/home/user/t_creat.txt";
+    char *filename      = "/tmp/t_creat.txt";
     char *content       = "Hello world!";
     size_t content_size = strlen(content);
 

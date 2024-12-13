@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
     if (test_consecutive_dirs("")) {
         return EXIT_FAILURE;
     }
-    if (test_consecutive_dirs("/home/alice")) {
+    if (test_consecutive_dirs("/tmp")) {
         return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;

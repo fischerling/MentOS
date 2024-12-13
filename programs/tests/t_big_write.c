@@ -13,7 +13,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#define FILENAME    "/home/user/test.txt"
+#define FILENAME    "/tmp/t_big_write.txt"
 #define ITERATIONS  8
 #define BUFFER_SIZE BUFSIZ
 
