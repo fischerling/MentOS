@@ -12,6 +12,8 @@ fi
 chown root:root -R "${ROOT}"
 chmod -R u=rwX,go=rX -R "${ROOT}"
 
+chmod 777 "${ROOT}/tmp"
+
 chmod -R a+rx "${ROOT}"/bin
 
 # Set security related permissions
