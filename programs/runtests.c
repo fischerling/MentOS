@@ -3,6 +3,7 @@
 /// @copyright (c) 2024 This file is distributed under the MIT License.
 /// See LICENSE.md for details.
 
+#include <stdbool.h>
 #include <fcntl.h>
 #include <io/port_io.h>
 #include <stddef.h>
@@ -115,14 +116,25 @@ static int test_out(const char *restrict format, ...)
     return test_out_flush();
 }
 
-static int test_ok(int test, int success, const char *restrict format, ...)
+static int test_result(int test, int status, const char *restrict format, ...)
 {
-    if (!success) {
+    bool_t ok = WIFEXITED(status) && (WEXITSTATUS(status) == 0 || WEXITSTATUS(status) == 77);
+    if (!ok) {
         append("not ");
     }
+
+    if (WEXITSTATUS(status) == 77) {
+        append("ok %2d # SKIP", test);
+        return test_out_flush();
+    }
+
     append("ok %2d - %s", test, tests[test - 1]);
+    if (WIFEXITED(status) && WEXITSTATUS(status) != 0) {
+        append(" Exit: %d", WEXITSTATUS(status));
+    } else if (WIFSIGNALED(status)) {
+        append(" Signal: %d", WSTOPSIG(status));
+    }
     if (format) {
-        append(": ");
         va_list ap;
         va_start(ap, format);
         bufpos += vsprintf(bufpos, format, ap);
@@ -182,15 +194,7 @@ static void run_test(int n, char *test_cmd_line)
     waitpid(child, &status, 0);
 
     int success = WIFEXITED(status) && WEXITSTATUS(status) == 0;
-    if (success) {
-        test_ok(n, success, NULL);
-    } else {
-        if (WIFSIGNALED(status)) {
-            test_ok(n, success, "Signal: %d", WSTOPSIG(status));
-        } else {
-            test_ok(n, success, "Exit: %d", WEXITSTATUS(status));
-        }
-    }
+    test_result(n, status, NULL);
 }
 
 int runtests_main(int argc, char **argv)
