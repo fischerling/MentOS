@@ -61,6 +61,11 @@ int test_generate(void)
 
 int test_getspnam(void)
 {
+    if (getuid() != 0) {
+        fprintf(stderr, "Only root is allowed to read the shadow password database.\n");
+        return 77;
+    }
+
     const char *username = "root";
 
     // Retrieve the shadow password entry for the user.
@@ -77,12 +82,11 @@ int test_getspnam(void)
 
 int main(int argc, char *argv[])
 {
-    if (test_generate() == EXIT_FAILURE) {
-        return EXIT_FAILURE;
+    int res = EXIT_SUCCESS;
+    res = test_generate();
+    if (res != EXIT_SUCCESS) {
+        return res;
     }
-    if (test_getspnam() == EXIT_FAILURE) {
-        return EXIT_FAILURE;
-    }
-
-    return EXIT_SUCCESS;
+    res = test_getspnam();
+    return res;
 }
